@@ -7,7 +7,7 @@ const {
 const {
     createUserValidations,
     checkValidations,
-} = require('../middlewares/validators.middleware');
+} = require('../middlewares/validations.middlewares');
 
 const {
     getAllUsers,
