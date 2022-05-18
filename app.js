@@ -1,21 +1,21 @@
 const express = require('express');
-
-// Routers
 const { usersRouter } = require('./routers/users.routes');
 const { repairsRouter } = require('./routers/repairs.routes');
-
 const { globalErrorHandler } = require('./controllers/error.controller');
+const rateLimit = require('express-rate-limit');
 
+const limit = rateLimit({
+    max: 100,
+    windowMs: 30 * 60 * 1000,
+    message: 'You exceed the limit request for your IP',
+});
 const app = express();
-
-// Enable incoming JSON data
+app.use(limit);
 app.use(express.json());
 
-// Endpoints
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/repairs', repairsRouter);
 
-// Global error handler
 app.use('*', globalErrorHandler);
 
 module.exports = { app };

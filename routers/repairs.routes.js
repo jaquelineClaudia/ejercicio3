@@ -1,31 +1,36 @@
 const express = require('express');
-const { pendingRepairExists } = require('../middlewares/repairs.middlewares');
 const {
-  createRepairValidations,
-  checkValidations,
-} = require('../middlewares/validators.middleware');
+    protectToken,
+    protectEmployee,
+} = require('../middlewares/users.middlewares');
+
+const { repairExists } = require('../middlewares/repairs.middlewares');
 
 const {
-  getAllCompletedRepairs,
-  getAllPendingRepairs,
-  createRepair,
-  getRepairById,
-  repairCancelled,
-  repairCompleted,
+    createRepairValidations,
+    checkValidations,
+} = require('../middlewares/validations.middlewares');
+const {
+    getAllPendingRepairs,
+    createRepair,
+    getRepairById,
+    updateRepair,
+    deleteRepair,
 } = require('../controllers/repairs.controller');
 
 const router = express.Router();
 
-router.get('/completed', getAllCompletedRepairs);
-
-router.get('/pending', getAllPendingRepairs);
-
 router.post('/', createRepairValidations, checkValidations, createRepair);
 
-router.get('/:id', pendingRepairExists, getRepairById);
+router.use(protectToken, protectEmployee);
 
-router.patch('/:id', pendingRepairExists, repairCompleted);
+router.get('/', getAllPendingRepairs);
 
-router.delete('/:id', pendingRepairExists, repairCancelled);
+router
+    .use('/:id', repairExists)
+    .route('/:id')
+    .get(getRepairById)
+    .patch(updateRepair)
+    .delete(deleteRepair);
 
 module.exports = { repairsRouter: router };
