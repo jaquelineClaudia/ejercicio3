@@ -25,11 +25,6 @@ const Review = db.define('review', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    status: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: 'true',
-    },
 });
 
 module.exports = { Review };

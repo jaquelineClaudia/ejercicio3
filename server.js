@@ -7,8 +7,8 @@ db.authenticate()
     .then(() => console.log('Database authenticated'))
     .catch(err => console.log(err));
 
-User.hasMany(Repair);
-Repair.belongsTo(User);
+User.hasMany(Order);
+Order.belongsTo(User);
 
 db.sync()
     .then(() => console.log('Database synced'))

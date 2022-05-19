@@ -11,7 +11,7 @@ const userExists = catchAsync(async (req, res, next) => {
     });
 
     if (!user) {
-        return next(new AppError('user not found for the id', 404));
+        return next(new AppError('no user founded for id', 404));
     }
 
     req.user = user;
@@ -39,30 +39,23 @@ const protectToken = catchAsync(async (req, res, next) => {
     });
 
     if (!user) return next(new AppError('Your session has expired', 403));
-
     req.sessionUser = user;
     next();
 });
 
-const protectEmployee = catchAsync(async (req, res, next) => {
-    const { sessionUser } = req;
-
-    if (sessionUser.role !== 'employee') {
-        return next(
-            new AppError('You must be an employee to access this endpoint', 403)
-        );
+const protectAdmin = catchAsync(async (req, res, next) => {
+    if (sessionUser.role !== 'admin') {
+        return next(new AppError('You must be an admin to access', 403));
     }
 
     next();
 });
 
-const protectAccountOwner = catchAsync(async (req, res, next) => {
+const protectOwner = catchAsync(async (req, res, next) => {
     const { sessionUser, user } = req;
 
     if (sessionUser.id !== user.id) {
-        return next(
-            new AppError('You are not able to modify foreign accounts', 403)
-        );
+        return next(new AppError('not able to modify ', 403));
     }
 
     next();
@@ -71,6 +64,6 @@ const protectAccountOwner = catchAsync(async (req, res, next) => {
 module.exports = {
     userExists,
     protectToken,
-    protectEmployee,
-    protectAccountOwner,
+    protectAdmin,
+    protectOwner,
 };

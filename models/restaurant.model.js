@@ -23,7 +23,7 @@ const Restaurant = db.define('order', {
     status: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: 'true',
+        defaultValue: 'active',
     },
 });
 

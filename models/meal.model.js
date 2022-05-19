@@ -13,7 +13,7 @@ const Meal = db.define('meal', {
         allowNull: false,
     },
     price: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     restaurantId: {
@@ -23,6 +23,7 @@ const Meal = db.define('meal', {
     status: {
         type: DataTypes.STRING,
         defaultValue: 'active',
+        allowNull: false,
     },
 });
 

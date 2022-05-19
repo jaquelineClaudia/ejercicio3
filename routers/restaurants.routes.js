@@ -1,36 +1,53 @@
 const express = require('express');
 const {
     protectToken,
-    protectEmployee,
+    protectAdmin,
+    protectOwner,
 } = require('../middlewares/users.middlewares');
 
-const { repairExists } = require('../middlewares/repairs.middlewares');
+const {
+    restaurantExists,
+    reviewExists,
+} = require('../middlewares/restaurants.middlewares');
 
 const {
-    createRepairValidations,
+    createRestaurantValidations,
     checkValidations,
 } = require('../middlewares/validations.middlewares');
+
 const {
-    getAllPendingRepairs,
-    createRepair,
-    getRepairById,
-    updateRepair,
-    deleteRepair,
-} = require('../controllers/repairs.controller');
+    getAllRestaurants,
+    createRestaurant,
+    getRestaurantById,
+    updateRestaurant,
+    deleteRestaurant,
+    createReview,
+    updateReview,
+    deleteReview,
+} = require('../controllers/restaurants.controller');
 
 const router = express.Router();
 
-router.post('/', createRepairValidations, checkValidations, createRepair);
+router.post('/', protectAdmin, createRestaurantValidations, createRestaurant);
+router.get('/', getAllRestaurants);
+router.get('/:id', restaurantExists, getRestaurantById);
+router.patch('/:id', protectAdmin, restaurantExists, updateRestaurant);
+router.delete('/:id', protectAdmin, restaurantExists, deleteRestaurant);
+router.post('/reviews/:id', restaurantExists, protectToken, createReview);
+router.patch(
+    '/reviews/:restaurantId/:id',
+    restaurantExists,
+    reviewExists,
+    protectOwner,
+    updateReview
+);
 
-router.use(protectToken, protectEmployee);
+router.delete(
+    '/reviews/:restaurantId/:id',
+    restaurantExists,
+    reviewExists,
+    protectOwner,
+    deleteReview
+);
 
-router.get('/', getAllPendingRepairs);
-
-router
-    .use('/:id', repairExists)
-    .route('/:id')
-    .get(getRepairById)
-    .patch(updateRepair)
-    .delete(deleteRepair);
-
-module.exports = { repairsRouter: router };
+module.exports = { restaurantsRouter: router };
