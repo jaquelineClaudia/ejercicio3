@@ -25,6 +25,7 @@ const createUser = catchAsync(async (req, res, next) => {
     const { name, email, password, role } = req.body;
     const salt = await bcrypt.genSalt(12);
     const hashPassword = await bcrypt.hash(password, salt);
+
     const newUser = await User.create({
         name,
         email,
@@ -56,11 +57,11 @@ const login = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({
-        where: { email, status: 'active' },
+        where: { email, status: 'available' },
     });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-        next(new AppError('Invalid credentials', 400));
+        return next(new AppError('Invalid credentials', 400));
     }
 
     const token = await jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
