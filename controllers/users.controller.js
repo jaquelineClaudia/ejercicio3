@@ -1,24 +1,33 @@
 const { User } = require('../models/user.model');
+const { Order } = require('../models/order.model');
+const { Meal } = require('../models/meal.model');
+const { Restaurant } = require('../models/restaurant.model');
 const { catchAsync } = require('../utils/catchAsync');
 const { AppError } = require('../utils/appError');
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 
 dotenv.config({ path: './config.env' });
 
-const getAllUsers = catchAsync(async (req, res, next) => {
-    const users = await User.findAll({
-        attributes: { exclude: ['password'] },
-    });
+const getAllUsersOrders = catchAsync(async (req, res, next) => {
+    const { sessionUser } = req;
 
-    res.status(200).json({ users });
+    const orders = await Order.findAll({
+        where: { userId: sessionUser.id, status: 'active' },
+        include: { model: Meal, include: { model: Restaurant } },
+    });
+    res.status(200).json({ orders });
 });
 
-const getUserById = catchAsync(async (req, res, next) => {
-    const { user } = req;
-
-    res.status(200).json({ user });
+const getOrderById = catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const order = await Order.findOne({
+        where: { id },
+        include: { model: Meal, include: { model: Restaurant } },
+    });
+    res.status(200).json({ order });
 });
 
 const createUser = catchAsync(async (req, res, next) => {
@@ -74,8 +83,8 @@ const login = catchAsync(async (req, res, next) => {
 });
 
 module.exports = {
-    getAllUsers,
-    getUserById,
+    getAllUsersOrders,
+    getOrderById,
     createUser,
     updateUser,
     deleteUser,

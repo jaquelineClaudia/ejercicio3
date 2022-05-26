@@ -2,7 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 
 const { usersRouter } = require('./routers/users.routes');
-const { repairsRouter } = require('./routers/repairs.routes');
+const { retaurantsRouter } = require('./routers/restaurants.routes');
 const { globalErrorHandler } = require('./controllers/error.controller');
 
 dotenv.config({ path: './config.env' });
@@ -22,6 +22,10 @@ const limiter = rateLimit({
 const app = express();
 
 app.use(limiter);
+
+const { mealsRouter } = require('./routes/meals.routes');
+const { ordersRouter } = require('./routes/orders.routes');
+
 app.use(express.json());
 
 app.use(helmet());
@@ -34,7 +38,9 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use('/api/v1/users', usersRouter);
-app.use('/api/v1/repairs', repairsRouter);
+app.use('/api/v1/restaurants', restaurantsRouter);
+app.use('/api/v1/meals', mealsRouter);
+app.use('/api/v1/orders', ordersRouter);
 
 app.use('*', globalErrorHandler);
 

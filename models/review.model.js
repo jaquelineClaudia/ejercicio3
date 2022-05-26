@@ -1,33 +1,30 @@
 const { DataTypes } = require('sequelize');
+
 const { db } = require('../utils/database');
 
-const Repair = db.define('repair', {
+const Review = db.define('review', {
     id: {
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
         type: DataTypes.INTEGER,
     },
-    date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-    },
-    computerNumber: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    comments: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
     userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    status: {
-        type: DataTypes.STRING,
-        defaultValue: 'pending',
+    comment: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    restaurantId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    rating: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
 });
 
-module.exports = { Repair };
+module.exports = { Review };

@@ -9,6 +9,7 @@ const db = new Sequelize({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB,
+    port: 5000,
     logging: false,
     dialectOptions:
         process.env.NODE_ENV === 'production'

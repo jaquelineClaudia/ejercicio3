@@ -1,11 +1,9 @@
 const { body, validationResult } = require('express-validator');
 
-const createRepairValidations = [
-    body('date').notEmpty().withMessage('Enter a valid date'),
-    body('computerNumber')
-        .notEmpty()
-        .withMessage('Enter a valid computer number'),
-    body('comments').notEmpty().withMessage('Provide valid comments'),
+const createRestaurantValidations = [
+    body('name').notEmpty().withMessage('Enter a valid name'),
+    body('adress').notEmpty().withMessage('Enter a valid address'),
+    body('rating').contains(1, 2, 3, 4, 5),
 ];
 
 const createUserValidations = [
@@ -39,6 +37,6 @@ const checkValidations = (req, res, next) => {
 
 module.exports = {
     createUserValidations,
-    createRepairValidations,
+    createRestaurantValidations,
     checkValidations,
 };
